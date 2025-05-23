@@ -1,0 +1,5 @@
+<section class="p-4">
+  <h1 class="text-4xl font-bold">Busqueda por capital</h1>
+  <country-search-input (query)="query.set($event)" placeholder="Buscar por capital" />
+  <country-list [countries]="countryResource.value()!" [loading]="countryResource.isLoading()" />
+</section>

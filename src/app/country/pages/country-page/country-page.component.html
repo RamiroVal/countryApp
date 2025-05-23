@@ -1,0 +1,5 @@
+@if (!countryResource.value()?.name) {
+  <h1>No se encontró el país</h1>
+} @else {
+  <country-information [country]="countryResource.value()!" />
+}

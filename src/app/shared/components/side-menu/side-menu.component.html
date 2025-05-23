@@ -1,0 +1,25 @@
+<aside class="drawer">
+  <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-side z-[50]">
+    <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <div class="bg-base-200 text-base-content min-h-full w-80 p-0">
+      <div class="p-4 pb-0">
+        <div class="flex items-center w-auto p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none" class="fill-current"><path d="M240-160q-33 0-56.5-23.5T160-240q0-33 23.5-56.5T240-320q33 0 56.5 23.5T320-240q0 33-23.5 56.5T240-160Zm240 0q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm240 0q-33 0-56.5-23.5T640-240q0-33 23.5-56.5T720-320q33 0 56.5 23.5T800-240q0 33-23.5 56.5T720-160ZM240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400ZM240-640q-33 0-56.5-23.5T160-720q0-33 23.5-56.5T240-800q33 0 56.5 23.5T320-720q0 33-23.5 56.5T240-640Zm240 0q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Zm240 0q-33 0-56.5-23.5T640-720q0-33 23.5-56.5T720-800q33 0 56.5 23.5T800-720q0 33-23.5 56.5T720-640Z"/></svg>
+          <a class="ml-2 font-semibold leading-tight text-base-content text-xl">Menú</a>
+        </div>
+      </div>
+      <div class="divider mt-0 px-4"></div>
+      <ul class="menu p-4 pt-2 w-full">
+        @for (menuItem of menuOptions; track menuItem.title) {
+          <li class="pb-2">
+            <a [routerLink]="[menuItem.url]" routerLinkActive="menu-active" class="w-full" (click)="closeDrawer()">
+              <svg-icon [key]="menuItem.icon" class="w-5 h-5" />
+              {{ menuItem.title }}
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</aside>

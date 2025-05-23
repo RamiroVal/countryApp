@@ -1,0 +1,14 @@
+<section class="flex flex-row gap-2 mt-4">
+  <div class="join">
+    <label class="input input-bordered join-item flex items-center gap-2">
+      <svg class="h-5 w-5 text-base-content/50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </g>
+      </svg>
+      <input type="search" class="grow" [placeholder]="placeholder()" (keyup.enter)="query.emit(txtSearch.value)" #txtSearch />
+    </label>
+    <button class="btn btn-soft join-item" (click)="query.emit(txtSearch.value)">Buscar</button>
+  </div>
+</section>

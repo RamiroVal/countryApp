@@ -1,0 +1,5 @@
+<section class="p-4">
+  <h1 class="text-4xl font-bold">Busqueda por país</h1>
+  <country-search-input (query)="query.set($event)" placeholder="Buscar por país" />
+  <country-list [loading]="this.countryResource.isLoading()" [countries]="countryResource.value()!" />
+</section>
