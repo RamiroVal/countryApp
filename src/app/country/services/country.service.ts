@@ -72,7 +72,7 @@ export class CountryService {
       .pipe(
         delay(300),
         map(CountryMapper.mapCountryResponseArrayToCountryArray),
-        tap((countries) => this.queryCacheName.set(region, { timestamp: Date.now(), data: countries})),
+        tap((countries) => this.queryCacheRegion.set(region, { timestamp: Date.now(), data: countries})),
         catchError((e) => throwError(() => e)),
       );
   }
