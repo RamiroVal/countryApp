@@ -1,4 +1,11 @@
 <section class="p-4">
-  <h1 class="text-4xl font-bold">Busqueda por región</h1>
-  <country-list [countries]="[]" [loading]="true" />
+  <h1 class="text-4xl font-bold pb-2">Busqueda por región</h1>
+  <section class="row mt-2">
+    <div class="tabs tabs-border mx-auto w-fit">
+      @for (region of regions; track region) {
+        <a role="tab" class="tab" (click)="selectedRegion.set(region)" [class.tab-active]="selectedRegion() === region">{{ region }}</a>
+      }
+    </div>
+  </section>
+  <country-list [countries]="countryResource.value() ?? []" [loading]="countryResource.isLoading()" />
 </section>

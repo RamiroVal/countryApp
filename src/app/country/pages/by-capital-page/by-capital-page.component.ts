@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, HostListener, inject, linkedSignal, OnDestroy, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
 import { CountryListComponent } from '../../components/country-list/country-list.component';
 import { CountrySearchInputComponent } from '../../components/country-search-input/country-search-input.component';
 import { CountryService } from '../../services/country.service';
 import { GlobalAlertService } from '../../../shared/components/global-alert/services/globa-alert.service';
-import { of } from 'rxjs';
 
 const SEARCH_TERM = 'countries-by-capital';
 
@@ -17,14 +18,24 @@ const SEARCH_TERM = 'countries-by-capital';
 export default class ByCapitalPageComponent implements OnInit, OnDestroy {
   private readonly countryService = inject(CountryService);
   private readonly alert = inject(GlobalAlertService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  query = signal<string>('');
+
+  queryParam = this.activatedRoute.snapshot.queryParamMap.get('query') ?? '';
+  query = linkedSignal<string>(() => this.queryParam);
 
   ngOnInit(): void {
-    this.countryResource.set(this.countryService.load(SEARCH_TERM));
+    if (!this.queryParam) this.countryResource.set(this.countryService.load(SEARCH_TERM));
   }
 
   ngOnDestroy(): void {
+    const countries = this.countryResource.value();
+    if (countries) this.countryService.save(SEARCH_TERM, countries);
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: BeforeUnloadEvent) {
     const countries = this.countryResource.value();
     if (countries) this.countryService.save(SEARCH_TERM, countries);
   }
@@ -36,6 +47,16 @@ export default class ByCapitalPageComponent implements OnInit, OnDestroy {
   //     return await firstValueFrom(this.countryService.byCapital(request.query));
   //   },
   // });
+
+  readonly urlParams = effect(() => {
+    const q = this.query();
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: q ? { query: q } : {},
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  });
 
   readonly countryResource = rxResource({
     request: () => ({ query: this.query() }),

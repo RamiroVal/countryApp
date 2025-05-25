@@ -1,3 +1,3 @@
 export const environment = {
-  api: 'https://restcountries.com/v3.1',
+  api: '/api/v3.1',
 };

@@ -7,7 +7,7 @@
           <path d="m21 21-4.3-4.3"></path>
         </g>
       </svg>
-      <input type="search" class="grow" [placeholder]="placeholder()" (keyup.enter)="query.emit(txtSearch.value)" #txtSearch />
+      <input type="search" class="grow" [placeholder]="placeholder()" (keyup)="inputValue.set(txtSearch.value)" [value]="inputValue()" #txtSearch />
     </label>
     <button class="btn btn-soft join-item" (click)="query.emit(txtSearch.value)">Buscar</button>
   </div>

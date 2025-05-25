@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, linkedSignal, OnDestroy, OnInit, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { CountrySearchInputComponent } from '../../components/country-search-input/country-search-input.component';
 import { CountryListComponent } from '../../components/country-list/country-list.component';
 import { CountryService } from '../../services/country.service';
 import { GlobalAlertService } from '../../../shared/components/global-alert/services/globa-alert.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const SEARCH_TERM = 'countries-by-country';
 
@@ -14,20 +15,34 @@ const SEARCH_TERM = 'countries-by-country';
   templateUrl: './by-country.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class ByCountryComponent implements OnInit, OnDestroy {
+export default class ByCountryComponent implements OnInit {
   private readonly countryService = inject(CountryService);
   private readonly alert = inject(GlobalAlertService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  query = signal<string>('');
+
+  queryParam = this.activatedRoute.snapshot.queryParamMap.get('query') ?? '';
+  query = linkedSignal<string>(() => this.queryParam);
 
   ngOnInit(): void {
-    this.countryResource.set(this.countryService.load(SEARCH_TERM));
+    if (!this.queryParam) this.countryResource.set(this.countryService.load(SEARCH_TERM));
   }
 
-  ngOnDestroy(): void {
+  readonly loadSessionStorage = effect(() => {
     const countries = this.countryResource.value();
     if (countries) this.countryService.save(SEARCH_TERM, countries);
-  }
+  });
+
+  readonly urlParams = effect(() => {
+    const q = this.query();
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: q ? { query: q } : {},
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  });
 
   readonly countryResource = rxResource({
     request: () => ({ query: this.query() }),
